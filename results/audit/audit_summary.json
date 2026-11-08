@@ -1,0 +1,148 @@
+{
+    "dataset": "CamVid",
+    "protocol": "11 semantic classes",
+    "dataset_root": "C:\\Users\\aksha\\Downloads\\Projects\\SemanticSegmentation\\data\\camvid_source",
+    "total_listed_pairs": 701,
+    "total_valid_pairs": 701,
+    "semantic_classes": {
+        "0": "Sky",
+        "1": "Building",
+        "2": "Pole",
+        "3": "Road",
+        "4": "Sidewalk",
+        "5": "Tree",
+        "6": "SignSymbol",
+        "7": "Fence",
+        "8": "Car",
+        "9": "Pedestrian",
+        "10": "Bicyclist"
+    },
+    "ignore_index": 255,
+    "valid_mask_ids_found": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        255
+    ],
+    "split_summaries": [
+        {
+            "split": "train",
+            "listed_pairs": 367,
+            "valid_pairs": 367,
+            "missing_images": 0,
+            "missing_masks": 0,
+            "unreadable_pairs": 0,
+            "dimension_mismatches": 0,
+            "image_modes": {
+                "RGB": 367
+            },
+            "mask_modes": {
+                "L": 367
+            },
+            "image_resolutions": {
+                "(960, 720)": 367
+            },
+            "mask_resolutions": {
+                "(960, 720)": 367
+            },
+            "mask_ids_found": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                255
+            ],
+            "invalid_mask_ids": []
+        },
+        {
+            "split": "validation",
+            "listed_pairs": 101,
+            "valid_pairs": 101,
+            "missing_images": 0,
+            "missing_masks": 0,
+            "unreadable_pairs": 0,
+            "dimension_mismatches": 0,
+            "image_modes": {
+                "RGB": 101
+            },
+            "mask_modes": {
+                "L": 101
+            },
+            "image_resolutions": {
+                "(960, 720)": 101
+            },
+            "mask_resolutions": {
+                "(960, 720)": 101
+            },
+            "mask_ids_found": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                255
+            ],
+            "invalid_mask_ids": []
+        },
+        {
+            "split": "test",
+            "listed_pairs": 233,
+            "valid_pairs": 233,
+            "missing_images": 0,
+            "missing_masks": 0,
+            "unreadable_pairs": 0,
+            "dimension_mismatches": 0,
+            "image_modes": {
+                "RGB": 233
+            },
+            "mask_modes": {
+                "L": 233
+            },
+            "image_resolutions": {
+                "(960, 720)": 233
+            },
+            "mask_resolutions": {
+                "(960, 720)": 233
+            },
+            "mask_ids_found": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                255
+            ],
+            "invalid_mask_ids": []
+        }
+    ],
+    "overlapping_images": [],
+    "audit_issues": [],
+    "class_pixel_distribution_policy": "Class-pixel counts and EDA plots use training masks only. Validation and test masks are structurally checked; test labels are not used for modelling or tuning."
+}

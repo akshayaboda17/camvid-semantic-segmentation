@@ -1,0 +1,4 @@
+split,listed_pairs,valid_pairs,missing_images,missing_masks,unreadable_pairs,dimension_mismatches,image_modes,mask_modes,image_resolutions,mask_resolutions,mask_ids_found,invalid_mask_ids
+train,367,367,0,0,0,0,{'RGB': 367},{'L': 367},"{'(960, 720)': 367}","{'(960, 720)': 367}","[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 255]",[]
+validation,101,101,0,0,0,0,{'RGB': 101},{'L': 101},"{'(960, 720)': 101}","{'(960, 720)': 101}","[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 255]",[]
+test,233,233,0,0,0,0,{'RGB': 233},{'L': 233},"{'(960, 720)': 233}","{'(960, 720)': 233}","[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 255]",[]

@@ -1,0 +1,12 @@
+class_id,class_name,pixel_count,percentage_of_valid_training_pixels,training_images_containing_class
+0,Sky,42828013,17.452348,366
+1,Building,59563871,24.272183,365
+2,Pole,2508483,1.022203,366
+3,Road,79247975,32.293425,367
+4,Sidewalk,12266078,4.998407,349
+5,Tree,24690762,10.061446,319
+6,SignSymbol,2976590,1.212956,351
+7,Fence,2859815,1.16537,173
+8,Car,15932363,6.492413,367
+9,Pedestrian,1786101,0.727833,320
+10,Bicyclist,739674,0.301416,201
