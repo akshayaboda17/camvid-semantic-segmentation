@@ -1,0 +1,45 @@
+﻿# Python virtual environments
+.venv/
+venv/
+env/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Jupyter temporary files
+.ipynb_checkpoints/
+
+# Downloaded datasets
+data/camvid_source/
+data/downloads/
+data/camvid/
+
+# Trained model weights and checkpoints
+*.pth
+*.pt
+*.ckpt
+*.onnx
+checkpoints/
+models/checkpoints/
+
+# Large generated outputs
+results/checkpoints/
+results/predictions/
+runs/
+wandb/
+
+# Private credentials and environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Local editor settings
+.vscode/
