@@ -6,8 +6,12 @@ Models:
     - U-Net++
     - PSPNet
 
-Initial loss:
-    - Multiclass Cross-Entropy Loss
+Supported loss functions:
+    - Cross-Entropy
+    - Dice
+    - Focal
+    - Lovasz-Softmax
+    - Boundary
 
 Features:
     - GPU training
@@ -24,7 +28,9 @@ Run from the project root:
 
     python -m src.train --model unetplusplus
 
-    python -m src.train --model pspnet
+    python -m src.train --model pspnet --loss cross_entropy
+
+    python -m src.train --model unetplusplus --loss dice
 
 """
 
@@ -58,10 +64,12 @@ from src.models import (
     get_model_info,
 )
 
-from src.metrics import (
-    SegmentationMetrics,
-    print_metrics,
+from src.losses import (
+    build_loss,
+    LOSS_NAMES,
 )
+
+from src.metrics import SegmentationMetrics
 
 
 # =========================================================
@@ -97,6 +105,33 @@ CLASS_NAMES = [
     "Pedestrian",
     "Bicyclist",
 ]
+
+LOSS_DISPLAY_NAMES = {
+    "cross_entropy": "Cross-Entropy",
+    "dice": "Dice",
+    "focal": "Focal",
+    "lovasz": "Lovasz-Softmax",
+    "boundary": "Boundary",
+}
+
+LOSS_DIRECTORY_NAMES = {
+    "cross_entropy": "ce",
+    "dice": "dice",
+    "focal": "focal",
+    "lovasz": "lovasz",
+    "boundary": "boundary",
+}
+
+
+def normalize_saved_loss_name(loss_name: str | None) -> str:
+    """Normalize loss names stored by older versions of train.py."""
+
+    if loss_name in (None, "CrossEntropyLoss", "ce"):
+        # Older checkpoints were created before selectable losses existed.
+        # That version trained with Cross-Entropy only.
+        return "cross_entropy"
+
+    return loss_name
 
 
 # =========================================================
@@ -531,6 +566,18 @@ def parse_args() -> argparse.Namespace:
         "--model",
         required=True,
         choices=["unetplusplus", "pspnet"],
+        help="Segmentation architecture to train.",
+    )
+
+    parser.add_argument(
+        "--loss",
+        type=str,
+        default="cross_entropy",
+        choices=LOSS_NAMES,
+        help=(
+            "Loss function: cross_entropy, dice, focal, "
+            "lovasz, or boundary. Default: cross_entropy."
+        ),
     )
 
     parser.add_argument(
@@ -650,7 +697,7 @@ def main() -> None:
     print("Batch size:", args.batch_size)
     print("Epochs:", args.epochs)
     print("Mixed precision:", use_amp)
-    print("Loss: Cross-Entropy")
+    print("Loss:", LOSS_DISPLAY_NAMES.get(args.loss, args.loss))
     print("Ignore index:", IGNORE_INDEX)
 
     # -----------------------------------------------------
@@ -667,7 +714,7 @@ def main() -> None:
 
         output_dir = (
             DEFAULT_RESULTS_DIR
-            / f"{args.model}_ce_seed{args.seed}"
+            / f"{args.model}_{LOSS_DIRECTORY_NAMES.get(args.loss, args.loss)}_seed{args.seed}"
         )
 
     checkpoint_dir = (
@@ -749,7 +796,9 @@ def main() -> None:
     # LOSS AND OPTIMIZER
     # -----------------------------------------------------
 
-    criterion = nn.CrossEntropyLoss(
+    criterion = build_loss(
+        loss_name=args.loss,
+        num_classes=NUM_CLASSES,
         ignore_index=IGNORE_INDEX,
     )
 
@@ -785,7 +834,8 @@ def main() -> None:
         "optimizer": "AdamW",
         "learning_rate": args.learning_rate,
         "weight_decay": args.weight_decay,
-        "loss": "CrossEntropyLoss",
+        "loss": args.loss,
+        "loss_display_name": LOSS_DISPLAY_NAMES.get(args.loss, args.loss),
         "ignore_index": IGNORE_INDEX,
         "batch_size": args.batch_size,
         "epochs": args.epochs,
@@ -797,19 +847,6 @@ def main() -> None:
         "test_accessed": False,
         "device": torch.cuda.get_device_name(0),
     }
-
-    with (
-        output_dir / "config.json"
-    ).open(
-        "w",
-        encoding="utf-8",
-    ) as file:
-
-        json.dump(
-            config,
-            file,
-            indent=4,
-        )
 
     # -----------------------------------------------------
     # RESUME SUPPORT
@@ -837,9 +874,23 @@ def main() -> None:
             weights_only=False,
         )
 
-        if checkpoint["config"]["model"] != args.model:
+        checkpoint_config = checkpoint.get("config", {})
+
+        saved_model = checkpoint_config.get("model")
+        if saved_model is not None and saved_model != args.model:
             raise ValueError(
-                "Checkpoint model does not match requested model."
+                "Checkpoint model does not match the requested model. "
+                f"Checkpoint: {saved_model}; requested: {args.model}."
+            )
+
+        saved_loss = normalize_saved_loss_name(
+            checkpoint_config.get("loss")
+        )
+        if saved_loss != args.loss:
+            raise ValueError(
+                "Checkpoint loss does not match the requested loss. "
+                f"Checkpoint: {saved_loss}; requested: {args.loss}. "
+                "Use the same --loss value used for the original run."
             )
 
         model.load_state_dict(
@@ -872,6 +923,21 @@ def main() -> None:
             best_miou,
         )
 
+    # Write the configuration only after any resume checkpoint has been
+    # validated, so a mismatched resume request cannot overwrite metadata.
+    with (
+        output_dir / "config.json"
+    ).open(
+        "w",
+        encoding="utf-8",
+    ) as file:
+
+        json.dump(
+            config,
+            file,
+            indent=4,
+        )
+
     # -----------------------------------------------------
     # TRAINING HISTORY
     # -----------------------------------------------------
@@ -901,6 +967,12 @@ def main() -> None:
     last_checkpoint = (
         checkpoint_dir / "last_checkpoint.pth"
     )
+
+    if last_checkpoint.is_file() and not args.resume:
+        raise FileExistsError(
+            f"A checkpoint already exists in {checkpoint_dir}. "
+            "Use --resume with that checkpoint, or choose a new --output-dir."
+        )
 
     # -----------------------------------------------------
     # TRAINING LOOP
@@ -1087,20 +1159,28 @@ def main() -> None:
     # FINAL SUMMARY
     # -----------------------------------------------------
 
+    # Sum recorded epoch durations so a resumed experiment includes all
+    # completed epochs, not only the latest Colab session.
+    recorded_epoch_times = [
+        float(row["epoch_time_seconds"])
+        for row in history
+        if row.get("epoch_time_seconds") not in (None, "")
+    ]
+    total_recorded_training_time = float(sum(recorded_epoch_times))
+
     summary = {
         "model": args.model,
-        "loss": "CrossEntropyLoss",
+        "loss": args.loss,
+        "loss_display_name": LOSS_DISPLAY_NAMES.get(args.loss, args.loss),
         "best_validation_miou": best_miou,
         "epochs_completed": len(history),
         "best_checkpoint": str(best_checkpoint),
         "last_checkpoint": str(last_checkpoint),
-        "total_training_time_seconds": total_training_time,
+        "total_training_time_seconds": total_recorded_training_time,
+        "this_session_elapsed_seconds": total_training_time,
         "mean_epoch_time_seconds": (
-            float(np.mean([
-                float(row["epoch_time_seconds"])
-                for row in history
-            ]))
-            if history else None
+            float(np.mean(recorded_epoch_times))
+            if recorded_epoch_times else None
         ),
         "history_file": str(history_path),
         "test_split_accessed": False,
@@ -1126,6 +1206,7 @@ def main() -> None:
     print("=" * 70)
 
     print("Model:", args.model)
+    print("Loss:", LOSS_DISPLAY_NAMES.get(args.loss, args.loss))
 
     print(
         f"Best validation mIoU: "
@@ -1133,8 +1214,8 @@ def main() -> None:
     )
 
     print(
-        f"Total training time: "
-        f"{total_training_time / 60:.2f} minutes"
+        f"Total recorded epoch time: "
+        f"{total_recorded_training_time / 60:.2f} minutes"
     )
 
     print("Results directory:", output_dir)
