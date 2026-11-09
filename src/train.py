@@ -68,6 +68,7 @@ from src.losses import (
     build_loss,
     LOSS_NAMES,
 )
+from src.losses.composite import CompositeSegmentationLoss
 
 from src.metrics import SegmentationMetrics
 
@@ -112,6 +113,7 @@ LOSS_DISPLAY_NAMES = {
     "focal": "Focal",
     "lovasz": "Lovasz-Softmax",
     "boundary": "Boundary",
+    "composite": "Composite (CE + Dice + Lovasz)",
 }
 
 LOSS_DIRECTORY_NAMES = {
@@ -120,7 +122,72 @@ LOSS_DIRECTORY_NAMES = {
     "focal": "focal",
     "lovasz": "lovasz",
     "boundary": "boundary",
+    "composite": "composite",
 }
+
+COMPOSITE_DEFAULT_WEIGHTS = {
+    "cross_entropy": 1.0 / 3.0,
+    "dice": 1.0 / 3.0,
+    "lovasz": 1.0 / 3.0,
+}
+
+
+def parse_composite_weights(raw_value: str | None) -> dict[str, float]:
+    """Parse and validate JSON-encoded composite weights."""
+    if not raw_value:
+        raise ValueError(
+            "--loss-weights is required when --loss composite is selected. "
+            'Example: --loss-weights \"{\\"cross_entropy\\":0.34,\\"dice\\":0.33,\\"lovasz\\":0.33}\".'
+        )
+
+    try:
+        supplied = json.loads(raw_value)
+    except json.JSONDecodeError as exc:
+        raise ValueError(
+            "Could not parse --loss-weights as a JSON object."
+        ) from exc
+
+    if not isinstance(supplied, dict):
+        raise ValueError("--loss-weights must be a JSON object.")
+
+    required = set(COMPOSITE_DEFAULT_WEIGHTS)
+    if set(supplied) != required:
+        raise ValueError(
+            "Composite weights must contain exactly: "
+            "cross_entropy, dice, lovasz."
+        )
+
+    weights: dict[str, float] = {}
+    for name in COMPOSITE_DEFAULT_WEIGHTS:
+        try:
+            value = float(supplied[name])
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"Weight {name!r} must be numeric.") from exc
+        if not np.isfinite(value) or value < 0:
+            raise ValueError(
+                f"Weight {name!r} must be finite and non-negative."
+            )
+        weights[name] = value
+
+    if abs(sum(weights.values()) - 1.0) > 1e-6:
+        raise ValueError(
+            "Composite weights must sum to 1.0. "
+            f"Received {sum(weights.values()):.8f}."
+        )
+    if not any(value > 0 for value in weights.values()):
+        raise ValueError("At least one composite weight must be positive.")
+
+    return weights
+
+
+def weights_match(saved: Any, requested: dict[str, float]) -> bool:
+    """Compare checkpoint and requested composite weights safely."""
+    if not isinstance(saved, dict) or set(saved) != set(requested):
+        return False
+    return all(
+        np.isclose(float(saved[name]), requested[name], atol=1e-8)
+        for name in requested
+    )
 
 
 def normalize_saved_loss_name(loss_name: str | None) -> str:
@@ -573,10 +640,20 @@ def parse_args() -> argparse.Namespace:
         "--loss",
         type=str,
         default="cross_entropy",
-        choices=LOSS_NAMES,
+        choices=tuple(LOSS_NAMES) + ("composite",),
         help=(
-            "Loss function: cross_entropy, dice, focal, "
-            "lovasz, or boundary. Default: cross_entropy."
+            "Loss function: cross_entropy, dice, focal, lovasz, boundary, "
+            "or composite. Composite combines CE, Dice and Lovasz."
+        ),
+    )
+
+    parser.add_argument(
+        "--loss-weights",
+        type=str,
+        default=None,
+        help=(
+            "JSON weights for the composite loss; must sum to 1. "
+            'Example JSON: cross_entropy=0.34, dice=0.33, lovasz=0.33.'
         ),
     )
 
@@ -658,6 +735,16 @@ def parse_args() -> argparse.Namespace:
 
     if args.learning_rate <= 0:
         parser.error("learning rate must be positive.")
+
+    if args.loss == "composite":
+        try:
+            args.parsed_loss_weights = parse_composite_weights(args.loss_weights)
+        except ValueError as exc:
+            parser.error(str(exc))
+    else:
+        if args.loss_weights is not None:
+            parser.error("--loss-weights can only be used with --loss composite.")
+        args.parsed_loss_weights = None
 
     return args
 
@@ -796,11 +883,20 @@ def main() -> None:
     # LOSS AND OPTIMIZER
     # -----------------------------------------------------
 
-    criterion = build_loss(
-        loss_name=args.loss,
-        num_classes=NUM_CLASSES,
-        ignore_index=IGNORE_INDEX,
-    )
+    if args.loss == "composite":
+        composite_weights = args.parsed_loss_weights
+        criterion = CompositeSegmentationLoss(
+            num_classes=NUM_CLASSES,
+            ignore_index=IGNORE_INDEX,
+            weights=composite_weights,
+        ).to(device)
+    else:
+        composite_weights = None
+        criterion = build_loss(
+            loss_name=args.loss,
+            num_classes=NUM_CLASSES,
+            ignore_index=IGNORE_INDEX,
+        ).to(device)
 
     optimizer = AdamW(
         model.parameters(),
@@ -836,6 +932,7 @@ def main() -> None:
         "weight_decay": args.weight_decay,
         "loss": args.loss,
         "loss_display_name": LOSS_DISPLAY_NAMES.get(args.loss, args.loss),
+        "loss_weights": composite_weights,
         "ignore_index": IGNORE_INDEX,
         "batch_size": args.batch_size,
         "epochs": args.epochs,
@@ -892,6 +989,14 @@ def main() -> None:
                 f"Checkpoint: {saved_loss}; requested: {args.loss}. "
                 "Use the same --loss value used for the original run."
             )
+
+        if args.loss == "composite":
+            saved_weights = checkpoint_config.get("loss_weights")
+            if not weights_match(saved_weights, composite_weights):
+                raise ValueError(
+                    "Checkpoint composite weights do not match --loss-weights. "
+                    f"Checkpoint: {saved_weights}; requested: {composite_weights}."
+                )
 
         model.load_state_dict(
             checkpoint["model_state_dict"]
@@ -1172,6 +1277,7 @@ def main() -> None:
         "model": args.model,
         "loss": args.loss,
         "loss_display_name": LOSS_DISPLAY_NAMES.get(args.loss, args.loss),
+        "loss_weights": composite_weights,
         "best_validation_miou": best_miou,
         "epochs_completed": len(history),
         "best_checkpoint": str(best_checkpoint),
