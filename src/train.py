@@ -694,6 +694,26 @@ def parse_args() -> argparse.Namespace:
     )
 
     parser.add_argument(
+        "--crop-mode",
+        type=str,
+        default="none",
+        choices=["none", "random", "class_aware"],
+        help=(
+            "Training crop strategy: none (original full-image pipeline), "
+            "random, or class_aware. Validation is always uncropped."
+        ),
+    )
+
+    parser.add_argument(
+        "--crop-size",
+        type=int,
+        nargs=2,
+        default=(360, 480),
+        metavar=("HEIGHT", "WIDTH"),
+        help="Training crop size in original-image pixels (default: 360 480).",
+    )
+
+    parser.add_argument(
         "--dataset-root",
         type=str,
         default=None,
@@ -732,6 +752,9 @@ def parse_args() -> argparse.Namespace:
 
     if args.num_workers < 0:
         parser.error("num_workers cannot be negative.")
+
+    if any(value <= 0 for value in args.crop_size):
+        parser.error("crop dimensions must be positive.")
 
     if args.learning_rate <= 0:
         parser.error("learning rate must be positive.")
@@ -785,6 +808,9 @@ def main() -> None:
     print("Epochs:", args.epochs)
     print("Mixed precision:", use_amp)
     print("Loss:", LOSS_DISPLAY_NAMES.get(args.loss, args.loss))
+    print("Training crop mode:", args.crop_mode)
+    print("Training crop size (H, W):", tuple(args.crop_size))
+    print("Validation preprocessing: full image, no cropping")
     print("Ignore index:", IGNORE_INDEX)
 
     # -----------------------------------------------------
@@ -799,10 +825,17 @@ def main() -> None:
 
     else:
 
-        output_dir = (
-            DEFAULT_RESULTS_DIR
-            / f"{args.model}_{LOSS_DIRECTORY_NAMES.get(args.loss, args.loss)}_seed{args.seed}"
+        experiment_name = (
+            f"{args.model}_{LOSS_DIRECTORY_NAMES.get(args.loss, args.loss)}_seed{args.seed}"
         )
+
+        # Keep the original baseline directory name unchanged.
+        # Crop experiments receive separate directories so they cannot
+        # overwrite the results from the original full-image pipeline.
+        if args.crop_mode != "none":
+            experiment_name += f"_crop_{args.crop_mode}"
+
+        output_dir = DEFAULT_RESULTS_DIR / experiment_name
 
     checkpoint_dir = (
         output_dir / "checkpoints"
@@ -827,6 +860,8 @@ def main() -> None:
         augment_train=True,
         num_workers=args.num_workers,
         seed=args.seed,
+        crop_mode=args.crop_mode,
+        crop_size=tuple(args.crop_size),
     )
 
     validation_loader = create_dataloader(
@@ -927,6 +962,9 @@ def main() -> None:
         "encoder_weights": "imagenet",
         "classes": NUM_CLASSES,
         "input_size": IMAGE_SIZE,
+        "crop_mode": args.crop_mode,
+        "crop_size": tuple(args.crop_size),
+        "validation_crop_mode": "none",
         "optimizer": "AdamW",
         "learning_rate": args.learning_rate,
         "weight_decay": args.weight_decay,
@@ -988,6 +1026,24 @@ def main() -> None:
                 "Checkpoint loss does not match the requested loss. "
                 f"Checkpoint: {saved_loss}; requested: {args.loss}. "
                 "Use the same --loss value used for the original run."
+            )
+
+        # Older checkpoints do not contain crop settings; those runs used
+        # the original full-image preprocessing (crop_mode='none').
+        saved_crop_mode = checkpoint_config.get("crop_mode", "none")
+        saved_crop_size = tuple(checkpoint_config.get("crop_size", (360, 480)))
+        requested_crop_size = tuple(args.crop_size)
+
+        if saved_crop_mode != args.crop_mode:
+            raise ValueError(
+                "Checkpoint crop mode does not match the requested crop mode. "
+                f"Checkpoint: {saved_crop_mode}; requested: {args.crop_mode}."
+            )
+
+        if saved_crop_size != requested_crop_size:
+            raise ValueError(
+                "Checkpoint crop size does not match the requested crop size. "
+                f"Checkpoint: {saved_crop_size}; requested: {requested_crop_size}."
             )
 
         if args.loss == "composite":
@@ -1276,6 +1332,8 @@ def main() -> None:
     summary = {
         "model": args.model,
         "loss": args.loss,
+        "crop_mode": args.crop_mode,
+        "crop_size": tuple(args.crop_size),
         "loss_display_name": LOSS_DISPLAY_NAMES.get(args.loss, args.loss),
         "loss_weights": composite_weights,
         "best_validation_miou": best_miou,

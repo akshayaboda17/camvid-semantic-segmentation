@@ -98,6 +98,7 @@ class CamVidDataset(Dataset):
         ).resolve()
 
         self.split = split
+
         self.transform = (
             transform
             if transform is not None
@@ -152,8 +153,6 @@ class CamVidDataset(Dataset):
 
                 image_relative, mask_relative = parts
 
-                # Split files use forward slashes.
-                # Convert paths safely for the current OS.
                 image_relative = image_relative.replace(
                     "\\", "/"
                 )
@@ -251,7 +250,7 @@ class CamVidDataset(Dataset):
                     f"in {mask_path}"
                 )
 
-        # Apply resizing, augmentation and normalization.
+        # Apply cropping, resizing, augmentation and normalization.
         image_tensor, mask_tensor = self.transform(
             image,
             mask
@@ -287,16 +286,29 @@ def create_dataloader(
     augment_train: bool = True,
     num_workers: int = 0,
     seed: int = 42,
+    crop_mode: str = "none",
+    crop_size: tuple[int, int] = (360, 480),
 ) -> DataLoader:
     """
     Create a DataLoader for train, validation or test.
 
     Training:
-        Shuffling + optional augmentation.
+        Shuffling + optional augmentation + selected crop mode.
 
     Validation / test:
-        No augmentation and no shuffling.
+        No augmentation, no cropping and no shuffling.
+
+    crop_mode:
+        "none"        - Original full-image preprocessing.
+        "random"      - Random training crops.
+        "class_aware" - Crops centred around rare-class pixels.
     """
+
+    if split not in SPLIT_FILES:
+        raise ValueError(
+            f"Invalid split '{split}'. "
+            f"Choose from {list(SPLIT_FILES)}."
+        )
 
     if batch_size <= 0:
         raise ValueError("batch_size must be positive.")
@@ -304,13 +316,25 @@ def create_dataloader(
     if num_workers < 0:
         raise ValueError("num_workers cannot be negative.")
 
+    if crop_mode not in ("none", "random", "class_aware"):
+        raise ValueError(
+            "crop_mode must be 'none', 'random', or 'class_aware'."
+        )
+
     is_training = split == "train"
+
+    # Cropping and augmentation are restricted to training.
+    effective_crop_mode = (
+        crop_mode if is_training and augment_train else "none"
+    )
 
     transform = CamVidTransform(
         image_size=image_size,
         augment=(
             is_training and augment_train
-        )
+        ),
+        crop_mode=effective_crop_mode,
+        crop_size=crop_size,
     )
 
     dataset = CamVidDataset(
