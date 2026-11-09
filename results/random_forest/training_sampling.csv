@@ -1,0 +1,12 @@
+class_id,class_name,candidate_samples,selected_samples
+0,Sky,36600,5000
+1,Building,36412,5000
+2,Pole,35182,5000
+3,Road,36700,5000
+4,Sidewalk,34684,5000
+5,Tree,31894,5000
+6,SignSymbol,32667,5000
+7,Fence,15741,5000
+8,Car,36449,5000
+9,Pedestrian,27881,5000
+10,Bicyclist,13035,5000

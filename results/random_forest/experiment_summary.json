@@ -1,0 +1,168 @@
+{
+    "experiment": "Random Forest CamVid baseline",
+    "dataset": "CamVid 11-class protocol",
+    "training_split": 367,
+    "validation_split": 101,
+    "test_split": "Not accessed",
+    "input_size": [
+        192,
+        256
+    ],
+    "features": [
+        "Red",
+        "Green",
+        "Blue",
+        "X_position",
+        "Y_position"
+    ],
+    "sampling_policy": {
+        "maximum_per_class_per_image": 100,
+        "maximum_per_class_over_training": 5000
+    },
+    "random_seed": 42,
+    "classifier_parameters": {
+        "n_estimators": 100,
+        "max_depth": 18,
+        "min_samples_leaf": 2,
+        "max_features": "sqrt",
+        "bootstrap": true,
+        "n_jobs": -1,
+        "random_state": 42
+    },
+    "training_samples": 55000,
+    "training_time_seconds": 0.8518608000013046,
+    "validation_inference_seconds_per_image": 0.20565834851119447,
+    "saved_model_size_bytes": 35932299,
+    "validation_metrics": {
+        "mean_iou": 0.33537577745034475,
+        "mean_dice": 0.4421681022004473,
+        "mean_precision": 0.4276157406947942,
+        "mean_recall": 0.5272690885214941,
+        "pixel_accuracy": 0.591542605153612,
+        "mean_boundary_f1": 0.30809548424868266,
+        "per_class": [
+            {
+                "class_id": 0,
+                "class_name": "Sky",
+                "actual_pixels": 456711,
+                "predicted_pixels": 483888,
+                "iou": 0.894714896068553,
+                "dice": 0.9444322181928749,
+                "precision": 0.9179107562080482,
+                "recall": 0.9725318636949843,
+                "boundary_f1": 0.6995545788534872
+            },
+            {
+                "class_id": 1,
+                "class_name": "Building",
+                "actual_pixels": 1290607,
+                "predicted_pixels": 537652,
+                "iou": 0.14446512285920504,
+                "dice": 0.25245875994593764,
+                "precision": 0.4292367553733642,
+                "recall": 0.17881508468495833,
+                "boundary_f1": 0.14087644967344007
+            },
+            {
+                "class_id": 2,
+                "class_name": "Pole",
+                "actual_pixels": 27925,
+                "predicted_pixels": 247080,
+                "iou": 0.013469688594066704,
+                "dice": 0.026581334884820278,
+                "precision": 0.014792779666504776,
+                "recall": 0.13088630259623993,
+                "boundary_f1": 0.08600653248771653
+            },
+            {
+                "class_id": 3,
+                "class_name": "Road",
+                "actual_pixels": 1433676,
+                "predicted_pixels": 1316424,
+                "iou": 0.8159259498928313,
+                "dice": 0.8986335042362096,
+                "precision": 0.9386535037343592,
+                "recall": 0.8618865071327134,
+                "boundary_f1": 0.4174995272589018
+            },
+            {
+                "class_id": 4,
+                "class_name": "Sidewalk",
+                "actual_pixels": 432706,
+                "predicted_pixels": 602294,
+                "iou": 0.48181024238693143,
+                "dice": 0.6502995169082125,
+                "precision": 0.5587470570850781,
+                "recall": 0.7777336112741676,
+                "boundary_f1": 0.47665921321263416
+            },
+            {
+                "class_id": 5,
+                "class_name": "Tree",
+                "actual_pixels": 812941,
+                "predicted_pixels": 685992,
+                "iou": 0.39743062644795296,
+                "dice": 0.5688019411141125,
+                "precision": 0.6214329030076152,
+                "recall": 0.5243898388689954,
+                "boundary_f1": 0.23082337610878137
+            },
+            {
+                "class_id": 6,
+                "class_name": "SignSymbol",
+                "actual_pixels": 44280,
+                "predicted_pixels": 349419,
+                "iou": 0.044441260973028036,
+                "dice": 0.08510054635648046,
+                "precision": 0.04794244159590635,
+                "recall": 0.378319783197832,
+                "boundary_f1": 0.12884098437064168
+            },
+            {
+                "class_id": 7,
+                "class_name": "Fence",
+                "actual_pixels": 153057,
+                "predicted_pixels": 235826,
+                "iou": 0.32206576281327765,
+                "dice": 0.48721594927008893,
+                "precision": 0.40171567172406775,
+                "recall": 0.6189524164200265,
+                "boundary_f1": 0.3715718729144828
+            },
+            {
+                "class_id": 8,
+                "class_name": "Car",
+                "actual_pixels": 122423,
+                "predicted_pixels": 167234,
+                "iou": 0.24892529912687292,
+                "dice": 0.39862319916314815,
+                "precision": 0.3452168817345755,
+                "recall": 0.4715780531436086,
+                "boundary_f1": 0.3103763300047933
+            },
+            {
+                "class_id": 9,
+                "class_name": "Pedestrian",
+                "actual_pixels": 37479,
+                "predicted_pixels": 138600,
+                "iou": 0.10437285966958944,
+                "dice": 0.18901742967645205,
+                "precision": 0.12006493506493507,
+                "recall": 0.444008644841111,
+                "boundary_f1": 0.19632845620086337
+            },
+            {
+                "class_id": 10,
+                "class_name": "Bicyclist",
+                "actual_pixels": 109947,
+                "predicted_pixels": 157343,
+                "iou": 0.22151184312148398,
+                "dice": 0.36268472445658273,
+                "precision": 0.3080594624482818,
+                "recall": 0.4408578678817976,
+                "boundary_f1": 0.3305130056497669
+            }
+        ]
+    },
+    "boundary_metric_definition": "Class-wise boundary F-score with two-pixel spatial tolerance at 256x192 resolution."
+}

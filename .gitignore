@@ -43,3 +43,6 @@ Thumbs.db
 
 # Local editor settings
 .vscode/
+
+# Serialized machine-learning models
+*.joblib
