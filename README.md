@@ -448,4 +448,3 @@ For a reproducible run, use the same dataset version, package versions, image di
 
 ---
 
-**Project status:** Core implementation and experiments completed; repository documentation and final report/presentation are being prepared.
