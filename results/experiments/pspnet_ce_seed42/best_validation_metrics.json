@@ -1,0 +1,131 @@
+{
+    "mean_iou": 0.5363023238780424,
+    "mean_dice": 0.633036234627546,
+    "mean_precision": 0.7242751026372131,
+    "mean_recall": 0.6350251818754274,
+    "pixel_accuracy": 0.8921113863518519,
+    "mean_boundary_f1": 0.45759638756089804,
+    "per_class": [
+        {
+            "class_id": 0,
+            "class_name": "Sky",
+            "actual_pixels": 456711,
+            "predicted_pixels": 462754,
+            "iou": 0.9235548730865706,
+            "dice": 0.9602584111412615,
+            "precision": 0.9539885122548913,
+            "recall": 0.9666112705846804,
+            "boundary_f1": 0.8370228931414752
+        },
+        {
+            "class_id": 1,
+            "class_name": "Building",
+            "actual_pixels": 1290607,
+            "predicted_pixels": 1364178,
+            "iou": 0.7990992254775793,
+            "dice": 0.8883325768376723,
+            "precision": 0.8643784022319668,
+            "recall": 0.9136522582009861,
+            "boundary_f1": 0.4918034460079549
+        },
+        {
+            "class_id": 2,
+            "class_name": "Pole",
+            "actual_pixels": 27925,
+            "predicted_pixels": 205,
+            "iou": 0.0024946543121881683,
+            "dice": 0.004976892996800568,
+            "precision": 0.34146341463414637,
+            "recall": 0.002506714413607878,
+            "boundary_f1": 0.0153527847621803
+        },
+        {
+            "class_id": 3,
+            "class_name": "Road",
+            "actual_pixels": 1433676,
+            "predicted_pixels": 1421589,
+            "iou": 0.9444616588430063,
+            "dice": 0.97143767741348,
+            "precision": 0.9755674811777525,
+            "recall": 0.9673426910961751,
+            "boundary_f1": 0.7139424418232005
+        },
+        {
+            "class_id": 4,
+            "class_name": "Sidewalk",
+            "actual_pixels": 432706,
+            "predicted_pixels": 467170,
+            "iou": 0.8006955644757853,
+            "dice": 0.8893180838248825,
+            "precision": 0.8565147590812766,
+            "recall": 0.9247341150804472,
+            "boundary_f1": 0.6787699721867864
+        },
+        {
+            "class_id": 5,
+            "class_name": "Tree",
+            "actual_pixels": 812941,
+            "predicted_pixels": 796833,
+            "iou": 0.8765762247544663,
+            "dice": 0.9342292769047084,
+            "precision": 0.9436720115758258,
+            "recall": 0.9249736450738737,
+            "boundary_f1": 0.5238900493336691
+        },
+        {
+            "class_id": 6,
+            "class_name": "SignSymbol",
+            "actual_pixels": 44280,
+            "predicted_pixels": 9097,
+            "iou": 0.15607199324251153,
+            "dice": 0.2700039342788092,
+            "precision": 0.7921292733868308,
+            "recall": 0.16273712737127372,
+            "boundary_f1": 0.2356153473675905
+        },
+        {
+            "class_id": 7,
+            "class_name": "Fence",
+            "actual_pixels": 153057,
+            "predicted_pixels": 130426,
+            "iou": 0.4014178156345318,
+            "dice": 0.5728738583971525,
+            "precision": 0.6225752534003957,
+            "recall": 0.5305213090547966,
+            "boundary_f1": 0.3592997011679084
+        },
+        {
+            "class_id": 8,
+            "class_name": "Car",
+            "actual_pixels": 122423,
+            "predicted_pixels": 147147,
+            "iou": 0.46106025376281146,
+            "dice": 0.6311310605779575,
+            "precision": 0.5781089658640679,
+            "recall": 0.6948612597306062,
+            "boundary_f1": 0.3719005436684923
+        },
+        {
+            "class_id": 9,
+            "class_name": "Pedestrian",
+            "actual_pixels": 37479,
+            "predicted_pixels": 73888,
+            "iou": 0.23533848764850085,
+            "dice": 0.38101053274309266,
+            "precision": 0.2871372888696405,
+            "recall": 0.5660770031217481,
+            "boundary_f1": 0.3432506486152991
+        },
+        {
+            "class_id": 10,
+            "class_name": "Bicyclist",
+            "actual_pixels": 109947,
+            "predicted_pixels": 48465,
+            "iou": 0.29855481142051465,
+            "dice": 0.4598262757871878,
+            "precision": 0.7514907665325493,
+            "recall": 0.3312596069015071,
+            "boundary_f1": 0.4627124350953218
+        }
+    ]
+}

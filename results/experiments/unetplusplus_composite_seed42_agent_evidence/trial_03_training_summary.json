@@ -1,0 +1,30 @@
+{
+    "model": "unetplusplus",
+    "loss": "composite",
+    "loss_display_name": "Composite (CE + Dice + Lovasz)",
+    "loss_weights": {
+        "cross_entropy": 0.24001,
+        "dice": 0.500999,
+        "lovasz": 0.258991
+    },
+    "best_validation_miou": 0.42184046007012926,
+    "epochs_completed": 3,
+    "best_checkpoint": "/content/camvid-semantic-segmentation/results/agent_search/unetplusplus_composite_seed42/trial_03/checkpoints/best_model.pth",
+    "last_checkpoint": "/content/camvid-semantic-segmentation/results/agent_search/unetplusplus_composite_seed42/trial_03/checkpoints/last_checkpoint.pth",
+    "total_training_time_seconds": 80.43355785899985,
+    "this_session_elapsed_seconds": 90.31939950100059,
+    "mean_epoch_time_seconds": 26.81118595299995,
+    "history_file": "/content/camvid-semantic-segmentation/results/agent_search/unetplusplus_composite_seed42/trial_03/history.csv",
+    "test_split_accessed": false,
+    "model_information": {
+        "model_name": "unetplusplus",
+        "encoder": "resnet18",
+        "pretrained_weights": "imagenet",
+        "input_channels": 3,
+        "output_classes": 11,
+        "input_height": 192,
+        "input_width": 256,
+        "total_parameters": 15971899,
+        "trainable_parameters": 15971899
+    }
+}

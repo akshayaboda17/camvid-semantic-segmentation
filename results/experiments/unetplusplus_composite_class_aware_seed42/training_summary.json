@@ -1,0 +1,35 @@
+{
+    "model": "unetplusplus",
+    "loss": "composite",
+    "crop_mode": "class_aware",
+    "crop_size": [
+        360,
+        480
+    ],
+    "loss_display_name": "Composite (CE + Dice + Lovasz)",
+    "loss_weights": {
+        "cross_entropy": 0.204267,
+        "dice": 0.636507,
+        "lovasz": 0.159226
+    },
+    "best_validation_miou": 0.5971872518452287,
+    "epochs_completed": 10,
+    "best_checkpoint": "results/experiments/unetplusplus_composite_class_aware_seed42/checkpoints/best_model.pth",
+    "last_checkpoint": "results/experiments/unetplusplus_composite_class_aware_seed42/checkpoints/last_checkpoint.pth",
+    "total_training_time_seconds": 298.512769070001,
+    "this_session_elapsed_seconds": 307.171426066001,
+    "mean_epoch_time_seconds": 29.851276907000102,
+    "history_file": "results/experiments/unetplusplus_composite_class_aware_seed42/history.csv",
+    "test_split_accessed": false,
+    "model_information": {
+        "model_name": "unetplusplus",
+        "encoder": "resnet18",
+        "pretrained_weights": "imagenet",
+        "input_channels": 3,
+        "output_classes": 11,
+        "input_height": 192,
+        "input_width": 256,
+        "total_parameters": 15971899,
+        "trainable_parameters": 15971899
+    }
+}

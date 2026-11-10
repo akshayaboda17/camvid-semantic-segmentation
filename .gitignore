@@ -46,3 +46,11 @@ Thumbs.db
 
 # Serialized machine-learning models
 *.joblib
+
+# Temporary project review archive
+CamVid_Project_Review.zip
+
+# Python test and tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/

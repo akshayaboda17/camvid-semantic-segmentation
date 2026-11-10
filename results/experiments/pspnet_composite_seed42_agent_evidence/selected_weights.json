@@ -1,0 +1,17 @@
+{
+  "model": "pspnet",
+  "loss": "composite",
+  "components": [
+    "cross_entropy",
+    "dice",
+    "lovasz"
+  ],
+  "weights": {
+    "cross_entropy": 0.333333,
+    "dice": 0.333333,
+    "lovasz": 0.333334
+  },
+  "selection_metric": "validation_mean_iou",
+  "selected_trial": 1,
+  "selected_validation_miou": 0.48737918052225154
+}

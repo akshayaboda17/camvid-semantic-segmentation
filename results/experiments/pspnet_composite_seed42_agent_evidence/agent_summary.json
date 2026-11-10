@@ -1,0 +1,38 @@
+{
+  "agent_name": "CompositeLossWeightSearchAgent",
+  "model": "pspnet",
+  "objective": "maximize validation mean IoU (mIoU)",
+  "search_space": {
+    "components": [
+      "cross_entropy",
+      "dice",
+      "lovasz"
+    ],
+    "constraints": "each lambda >= 0 and lambda_CE + lambda_Dice + lambda_Lovasz = 1",
+    "sampling_distribution": "Dirichlet(alpha=[1.5, 1.5, 1.5])",
+    "reference_trial": "equal weights (1/3, 1/3, 1/3)"
+  },
+  "strategy": "fixed-seed random search over the weight simplex",
+  "compute_budget": {
+    "trials": 5,
+    "epochs_per_trial": 3,
+    "total_search_model_epochs": 15,
+    "batch_size": 4,
+    "seed": 42
+  },
+  "stopping_rule": "stop after the predeclared number of trials has completed",
+  "data_protocol": {
+    "training_split_used": true,
+    "validation_split_used_for_selection": true,
+    "test_split_accessed": false
+  },
+  "selected_trial": 1,
+  "selected_weights": {
+    "cross_entropy": 0.333333,
+    "dice": 0.333333,
+    "lovasz": 0.333334
+  },
+  "selected_validation_miou": 0.48737918052225154,
+  "selected_validation_miou_percent": 48.737918052225154,
+  "trial_log": "agent_trials.csv"
+}

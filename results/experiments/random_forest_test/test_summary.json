@@ -1,0 +1,20 @@
+{
+    "experiment": "Random Forest CamVid final test evaluation",
+    "model": "Original trained RandomForestClassifier",
+    "test_images": 233,
+    "model_parameters": {
+        "n_estimators": 100,
+        "max_depth": 18,
+        "random_state": 42,
+        "n_features": 5
+    },
+    "average_inference_ms_per_image": 382.1472791244798,
+    "test_metrics": {
+        "mean_iou": 0.26366790478619523,
+        "mean_dice": 0.35516604651334943,
+        "mean_precision": 0.3638799092139102,
+        "mean_recall": 0.4254381633722852,
+        "pixel_accuracy": 0.584663327502515,
+        "mean_boundary_f1": 0.2626031047315578
+    }
+}

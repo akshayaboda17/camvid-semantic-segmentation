@@ -1,0 +1,50 @@
+{
+    "model": "pspnet",
+    "checkpoint": "/content/camvid-semantic-segmentation/checkpoints/restored/pspnet_composite_seed42_best_model.pth",
+    "split": "validation",
+    "number_of_images": 101,
+    "input_size": [
+        192,
+        256
+    ],
+    "device": "cuda",
+    "mixed_precision": true,
+    "test_split_accessed": false,
+    "methods": {
+        "standard": {
+            "metrics": {
+                "mean_iou": 0.5603136833716126,
+                "mean_dice": 0.6611831566951099,
+                "mean_precision": 0.7158531444357942,
+                "mean_recall": 0.670722812608923,
+                "pixel_accuracy": 0.89386889059018,
+                "mean_boundary_f1": 0.47582736055418456
+            },
+            "total_model_inference_seconds": 0.9061850280004364,
+            "model_inference_ms_per_image": 8.97212899010333,
+            "per_class_metrics_file": "standard_class_metrics.csv",
+            "confusion_matrix_file": "standard_confusion_matrix.csv"
+        },
+        "tta": {
+            "metrics": {
+                "mean_iou": 0.5605965278746654,
+                "mean_dice": 0.6598584501747325,
+                "mean_precision": 0.7234115882841695,
+                "mean_recall": 0.6709867542481884,
+                "pixel_accuracy": 0.8962176476994371,
+                "mean_boundary_f1": 0.47669134550320513
+            },
+            "total_model_inference_seconds": 0.42263458000070386,
+            "model_inference_ms_per_image": 4.184500792086177,
+            "per_class_metrics_file": "tta_class_metrics.csv",
+            "confusion_matrix_file": "tta_confusion_matrix.csv"
+        }
+    },
+    "tta_minus_standard": {
+        "mean_iou": 0.00028284450305282594,
+        "mean_dice": -0.0013247065203773056,
+        "pixel_accuracy": 0.0023487571092570825,
+        "mean_boundary_f1": 0.0008639849490205687,
+        "inference_time_ratio": 0.46638883554860533
+    }
+}

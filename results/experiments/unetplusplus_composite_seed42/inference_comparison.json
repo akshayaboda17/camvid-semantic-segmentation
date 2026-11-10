@@ -1,0 +1,50 @@
+{
+    "model": "unetplusplus",
+    "checkpoint": "/content/camvid-semantic-segmentation/checkpoints/restored/unetplusplus_composite_seed42_best_model.pth",
+    "split": "validation",
+    "number_of_images": 101,
+    "input_size": [
+        192,
+        256
+    ],
+    "device": "cuda",
+    "mixed_precision": true,
+    "test_split_accessed": false,
+    "methods": {
+        "standard": {
+            "metrics": {
+                "mean_iou": 0.6393641487944488,
+                "mean_dice": 0.7337266978762522,
+                "mean_precision": 0.7378732641954321,
+                "mean_recall": 0.7440757400790968,
+                "pixel_accuracy": 0.9216331907824693,
+                "mean_boundary_f1": 0.594688017304482
+            },
+            "total_model_inference_seconds": 1.3132401719981317,
+            "model_inference_ms_per_image": 13.002377940575562,
+            "per_class_metrics_file": "standard_class_metrics.csv",
+            "confusion_matrix_file": "standard_confusion_matrix.csv"
+        },
+        "tta": {
+            "metrics": {
+                "mean_iou": 0.64863097160302,
+                "mean_dice": 0.7411172632903672,
+                "mean_precision": 0.7512981622135979,
+                "mean_recall": 0.7478578851098184,
+                "pixel_accuracy": 0.925802641010762,
+                "mean_boundary_f1": 0.61117059234415
+            },
+            "total_model_inference_seconds": 1.443850490999921,
+            "model_inference_ms_per_image": 14.295549415840803,
+            "per_class_metrics_file": "tta_class_metrics.csv",
+            "confusion_matrix_file": "tta_confusion_matrix.csv"
+        }
+    },
+    "tta_minus_standard": {
+        "mean_iou": 0.009266822808571162,
+        "mean_dice": 0.00739056541411498,
+        "pixel_accuracy": 0.004169450228292737,
+        "mean_boundary_f1": 0.0164825750396681,
+        "inference_time_ratio": 1.0994565364255207
+    }
+}

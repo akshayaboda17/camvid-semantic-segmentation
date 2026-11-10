@@ -1,0 +1,30 @@
+{
+    "model": "unetplusplus",
+    "loss": "composite",
+    "loss_display_name": "Composite (CE + Dice + Lovasz)",
+    "loss_weights": {
+        "cross_entropy": 0.204267,
+        "dice": 0.636507,
+        "lovasz": 0.159226
+    },
+    "best_validation_miou": 0.6393641487944488,
+    "epochs_completed": 10,
+    "best_checkpoint": "results/training/unetplusplus_composite_seed42/checkpoints/best_model.pth",
+    "last_checkpoint": "results/training/unetplusplus_composite_seed42/checkpoints/last_checkpoint.pth",
+    "total_training_time_seconds": 272.28091443500125,
+    "this_session_elapsed_seconds": 221.9042828649999,
+    "mean_epoch_time_seconds": 27.228091443500126,
+    "history_file": "results/training/unetplusplus_composite_seed42/history.csv",
+    "test_split_accessed": false,
+    "model_information": {
+        "model_name": "unetplusplus",
+        "encoder": "resnet18",
+        "pretrained_weights": "imagenet",
+        "input_channels": 3,
+        "output_classes": 11,
+        "input_height": 192,
+        "input_width": 256,
+        "total_parameters": 15971899,
+        "trainable_parameters": 15971899
+    }
+}

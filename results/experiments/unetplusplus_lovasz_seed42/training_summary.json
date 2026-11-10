@@ -1,0 +1,25 @@
+{
+    "model": "unetplusplus",
+    "loss": "lovasz",
+    "loss_display_name": "Lovasz-Softmax",
+    "best_validation_miou": 0.6331010291233011,
+    "epochs_completed": 10,
+    "best_checkpoint": "results/training/unetplusplus_lovasz_seed42/checkpoints/best_model.pth",
+    "last_checkpoint": "results/training/unetplusplus_lovasz_seed42/checkpoints/last_checkpoint.pth",
+    "total_training_time_seconds": 267.40615879699726,
+    "this_session_elapsed_seconds": 249.15257175100123,
+    "mean_epoch_time_seconds": 26.740615879699725,
+    "history_file": "results/training/unetplusplus_lovasz_seed42/history.csv",
+    "test_split_accessed": false,
+    "model_information": {
+        "model_name": "unetplusplus",
+        "encoder": "resnet18",
+        "pretrained_weights": "imagenet",
+        "input_channels": 3,
+        "output_classes": 11,
+        "input_height": 192,
+        "input_width": 256,
+        "total_parameters": 15971899,
+        "trainable_parameters": 15971899
+    }
+}

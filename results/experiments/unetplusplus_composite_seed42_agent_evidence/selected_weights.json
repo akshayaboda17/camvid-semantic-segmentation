@@ -1,0 +1,17 @@
+{
+  "model": "unetplusplus",
+  "loss": "composite",
+  "components": [
+    "cross_entropy",
+    "dice",
+    "lovasz"
+  ],
+  "weights": {
+    "cross_entropy": 0.204267,
+    "dice": 0.636507,
+    "lovasz": 0.159226
+  },
+  "selection_metric": "validation_mean_iou",
+  "selected_trial": 5,
+  "selected_validation_miou": 0.42551402564209373
+}

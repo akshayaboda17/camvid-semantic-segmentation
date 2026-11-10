@@ -1,0 +1,36 @@
+{
+    "model": "unetplusplus",
+    "encoder": "resnet18",
+    "encoder_weights": "imagenet",
+    "classes": 11,
+    "input_size": [
+        192,
+        256
+    ],
+    "crop_mode": "none",
+    "crop_size": [
+        360,
+        480
+    ],
+    "validation_crop_mode": "none",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001,
+    "loss": "composite",
+    "loss_display_name": "Composite (CE + Dice + Lovasz)",
+    "loss_weights": {
+        "cross_entropy": 0.204267,
+        "dice": 0.636507,
+        "lovasz": 0.159226
+    },
+    "ignore_index": 255,
+    "batch_size": 4,
+    "epochs": 10,
+    "seed": 7,
+    "mixed_precision": true,
+    "dataset": "CamVid",
+    "training_images": 367,
+    "validation_images": 101,
+    "test_accessed": false,
+    "device": "Tesla T4"
+}

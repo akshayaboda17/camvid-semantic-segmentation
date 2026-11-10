@@ -1,0 +1,25 @@
+{
+    "model": "unetplusplus",
+    "loss": "boundary",
+    "loss_display_name": "Boundary",
+    "best_validation_miou": 0.3684423078904111,
+    "epochs_completed": 10,
+    "best_checkpoint": "results/training/unetplusplus_boundary_seed42/checkpoints/best_model.pth",
+    "last_checkpoint": "results/training/unetplusplus_boundary_seed42/checkpoints/last_checkpoint.pth",
+    "total_training_time_seconds": 565.3996807479998,
+    "this_session_elapsed_seconds": 538.1619163569994,
+    "mean_epoch_time_seconds": 56.53996807479998,
+    "history_file": "results/training/unetplusplus_boundary_seed42/history.csv",
+    "test_split_accessed": false,
+    "model_information": {
+        "model_name": "unetplusplus",
+        "encoder": "resnet18",
+        "pretrained_weights": "imagenet",
+        "input_channels": 3,
+        "output_classes": 11,
+        "input_height": 192,
+        "input_width": 256,
+        "total_parameters": 15971899,
+        "trainable_parameters": 15971899
+    }
+}

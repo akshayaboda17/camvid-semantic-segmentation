@@ -1,0 +1,25 @@
+{
+    "model": "pspnet",
+    "loss": "focal",
+    "loss_display_name": "Focal",
+    "best_validation_miou": 0.5483305934926145,
+    "epochs_completed": 10,
+    "best_checkpoint": "results/training/pspnet_focal_seed42/checkpoints/best_model.pth",
+    "last_checkpoint": "results/training/pspnet_focal_seed42/checkpoints/last_checkpoint.pth",
+    "total_training_time_seconds": 240.8340675770014,
+    "this_session_elapsed_seconds": 217.9420866349992,
+    "mean_epoch_time_seconds": 24.08340675770014,
+    "history_file": "results/training/pspnet_focal_seed42/history.csv",
+    "test_split_accessed": false,
+    "model_information": {
+        "model_name": "pspnet",
+        "encoder": "resnet18",
+        "pretrained_weights": "imagenet",
+        "input_channels": 3,
+        "output_classes": 11,
+        "input_height": 192,
+        "input_width": 256,
+        "total_parameters": 11375915,
+        "trainable_parameters": 11375915
+    }
+}

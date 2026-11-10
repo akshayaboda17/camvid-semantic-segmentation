@@ -1,0 +1,25 @@
+{
+    "model": "unetplusplus",
+    "loss": "focal",
+    "loss_display_name": "Focal",
+    "best_validation_miou": 0.5481334784212556,
+    "epochs_completed": 10,
+    "best_checkpoint": "results/training/unetplusplus_focal_seed42/checkpoints/best_model.pth",
+    "last_checkpoint": "results/training/unetplusplus_focal_seed42/checkpoints/last_checkpoint.pth",
+    "total_training_time_seconds": 257.3789579200002,
+    "this_session_elapsed_seconds": 239.08551848000025,
+    "mean_epoch_time_seconds": 25.737895792000018,
+    "history_file": "results/training/unetplusplus_focal_seed42/history.csv",
+    "test_split_accessed": false,
+    "model_information": {
+        "model_name": "unetplusplus",
+        "encoder": "resnet18",
+        "pretrained_weights": "imagenet",
+        "input_channels": 3,
+        "output_classes": 11,
+        "input_height": 192,
+        "input_width": 256,
+        "total_parameters": 15971899,
+        "trainable_parameters": 15971899
+    }
+}

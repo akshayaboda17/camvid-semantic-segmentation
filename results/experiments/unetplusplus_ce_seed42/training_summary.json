@@ -1,0 +1,26 @@
+{
+    "model": "unetplusplus",
+    "loss": "CrossEntropyLoss",
+    "best_validation_miou": 0.5300078082086593,
+    "epochs_completed": 10,
+    "best_checkpoint": "results/training/unetplusplus_ce_seed42/checkpoints/best_model.pth",
+    "last_checkpoint": "results/training/unetplusplus_ce_seed42/checkpoints/last_checkpoint.pth",
+    "total_training_time_seconds": 265.37037400499867,
+    "mean_epoch_time_seconds": 26.537037400499866,
+    "history_file": "results/training/unetplusplus_ce_seed42/history.csv",
+    "test_split_accessed": false,
+    "model_information": {
+        "model_name": "unetplusplus",
+        "encoder": "resnet18",
+        "pretrained_weights": "imagenet",
+        "input_channels": 3,
+        "output_classes": 11,
+        "input_height": 192,
+        "input_width": 256,
+        "total_parameters": 15971899,
+        "trainable_parameters": 15971899
+    },
+    "resumed_session_time_seconds": 246.46460787100023,
+    "epochs_recorded": 10,
+    "training_time_definition": "Sum of recorded epoch times across all epochs; excludes setup and initial model loading."
+}

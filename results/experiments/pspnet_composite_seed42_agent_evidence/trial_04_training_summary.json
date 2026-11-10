@@ -1,0 +1,30 @@
+{
+    "model": "pspnet",
+    "loss": "composite",
+    "loss_display_name": "Composite (CE + Dice + Lovasz)",
+    "loss_weights": {
+        "cross_entropy": 0.303683,
+        "dice": 0.280058,
+        "lovasz": 0.416259
+    },
+    "best_validation_miou": 0.48390899728710846,
+    "epochs_completed": 3,
+    "best_checkpoint": "/content/camvid-semantic-segmentation/results/agent_search/pspnet_composite_seed42/trial_04/checkpoints/best_model.pth",
+    "last_checkpoint": "/content/camvid-semantic-segmentation/results/agent_search/pspnet_composite_seed42/trial_04/checkpoints/last_checkpoint.pth",
+    "total_training_time_seconds": 76.04556662400137,
+    "this_session_elapsed_seconds": 76.80634517900035,
+    "mean_epoch_time_seconds": 25.348522208000457,
+    "history_file": "/content/camvid-semantic-segmentation/results/agent_search/pspnet_composite_seed42/trial_04/history.csv",
+    "test_split_accessed": false,
+    "model_information": {
+        "model_name": "pspnet",
+        "encoder": "resnet18",
+        "pretrained_weights": "imagenet",
+        "input_channels": 3,
+        "output_classes": 11,
+        "input_height": 192,
+        "input_width": 256,
+        "total_parameters": 11375915,
+        "trainable_parameters": 11375915
+    }
+}
